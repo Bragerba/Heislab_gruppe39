@@ -3,6 +3,7 @@
 #include <signal.h>
 #include <time.h>
 #include "driver/elevio.h"
+#include "lights.h"
 
 
 
@@ -43,6 +44,8 @@ int main(){
             elevio_motorDirection(DIRN_STOP);
             break;
         }
+
+
         
         nanosleep(&(struct timespec){0, 20*1000*1000}, NULL);
     }
