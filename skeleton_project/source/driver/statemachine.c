@@ -31,7 +31,7 @@ void state_doorOpen(Elevator *e) {
     
     else if (time(NULL) - e->doorTime >= 3){
         elevio_doorOpenLamp(0);
-        elevator_clearRequests(e);
+        elevator_clearCurrentFloorRequests(e);
         e->state = IDLE;
     }
 

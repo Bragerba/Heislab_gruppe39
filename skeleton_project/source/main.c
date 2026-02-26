@@ -33,16 +33,34 @@ int main(){
         e.obstruction = elevio_obstruction();
         elevator_requests(&e);
 
-        if(e.state == MOVING && sensor == 2) {
-            elevio_motorDirection(DIRN_STOP);
-            e.doorTime = time(NULL); //Start timeren her
-            e.state = DOOR_OPEN;
-        } 
-
-        else if(e.state == IDLE && e.floor != 2) {
-            elevio_motorDirection(DIRN_UP);
-            e.state = MOVING;
-        }
+        if (e.state == IDLE) {
+                if (elevator_hasRequestsHere(&e)) {
+                    // Åpne døren hvis det er en bestilling akkurat her
+                    e.doorTime = time(NULL);
+                    e.state = DOOR_OPEN;
+                } 
+                else if (elevator_hasRequestsOver(&e)) {
+                    elevio_motorDirection(DIRN_UP);
+                    e.state = MOVING;
+                } 
+                else if (elevator_hasRequestsBelow(&e)) {
+                    elevio_motorDirection(DIRN_DOWN);
+                    e.state = MOVING;
+                }
+            } 
+            
+            else if (e.state == MOVING) {
+                // Vi bruker hasRequestsHere for å sjekke om vi skal stoppe
+                if (sensor != -1 && elevator_hasRequestsHere(&e)) {
+                    elevio_motorDirection(DIRN_STOP);
+                    e.doorTime = time(NULL);
+                    e.state = DOOR_OPEN;
+                }
+            } 
+            
+            else if (e.state == DOOR_OPEN) {
+                state_doorOpen(&e); // Denne må inneholde elevator_clearRequests!
+            }
 
         stateMachine(&e);
 
@@ -65,6 +83,8 @@ int main(){
         if(floor == 0){
             elevio_motorDirection(DIRN_UP);
         }
+        e.stopButton = elevio_stopButton();
+        e.obstruction = elevio_obstruction();
 
         if(floor == N_FLOORS-1){
             elevio_motorDirection(DIRN_DOWN);

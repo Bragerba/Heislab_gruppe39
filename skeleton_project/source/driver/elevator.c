@@ -33,7 +33,7 @@ void elevator_requests(Elevator *e) {
     }
 }
 
-void elevator_clearRequests(Elevator *e){
+void elevator_clearCurrentFloorRequests(Elevator *e){ //sletter bestilling på nåværende etasje
    if(e->floor == -1) return; // Ikke slett noe hvis vi ikke er i en etasje
 
     for (int b = 0; b < N_BUTTONS; b++){
@@ -84,7 +84,32 @@ int elevator_hasRequestsHere(const Elevator *e){
 }
 
 int elevator_shouldStop(const Elevator *e){
-    
+
+    int currentFloor = e->floor;
+
+    if(currentFloor == -1){
+        return 0;
+    }
+
+    if(e->requests[currentFloor][BUTTON_CAB]){
+        return 1;
+    }
+
+    if(e->dir == DIRN_UP){
+
+        if(e->requests[currentFloor][BUTTON_HALL_UP] || !elevator_hasRequestsOver(e)){
+            return 1;
+        }
+    }
+
+    if(e->dir == DIRN_DOWN){
+
+        if(e->requests[currentFloor][BUTTON_HALL_DOWN] || !elevator_hasRequestsBelow(e)){
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
 //lyslogikk
