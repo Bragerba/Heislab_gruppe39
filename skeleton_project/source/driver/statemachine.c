@@ -40,9 +40,42 @@ void state_doorOpen(Elevator *e) {
 }  
 
 void state_idle(Elevator *e) {
-    
+    elevio_motorDirection(DIRN_STOP);
+
+    if (elevator_hasRequestsHere(e)) {
+        elevio_doorOpenLamp(1);
+        e->doorTime = time(NULL);
+        elevator_clearCurrentFloorRequests(e);
+        e->state = DOOR_OPEN;
+    }
+
+    else if (elevator_hasRequestsOver(e)) {
+        e->dir = DIRN_UP;
+        elevio_motorDirection(e->dir);
+        e->state = MOVING;
+    }
+
+    else if (elevator_hasRequestsBelow(e)) {
+        e->dir = DIRN_DOWN;
+        elevio_motorDirection(e->dir);
+        e->state = MOVING;
+    }
 }
 
 void state_moving(Elevator *e) {
+    int floor = elevio_floorSensor();
+    if (floor != -1) {
+        e->floor = floor;
+    }
 
+    if (elevator_shouldStop(e)) {
+        elevio_motorDirection(DIRN_STOP);
+
+        elevio_doorOpenLamp(1);
+        e->doorTime = time(NULL);
+        elevator_clearCurrentFloorRequests(e);
+
+        e->state = DOOR_OPEN;
+        return;
+    }
 }
