@@ -38,3 +38,5 @@ void elevator_clearButtonLamps(Elevator *e); //slukker alle lysene
 void elevator_updateFloorLamps(Elevator *e); //setter lysene som indikerer hvilken etasje vi er i
 void elevator_updateStopLamp(Elevator *e); //oppdaterer stopp lyset
 
+void elevator_updateObstruction(Elevator *e); //?
+

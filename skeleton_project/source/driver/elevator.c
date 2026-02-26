@@ -41,6 +41,52 @@ void elevator_clearRequests(Elevator *e){
     }
 }
 
+//Bestillingslogikk
+
+int elevator_hasRequestsBelow(const Elevator *e){
+    int currentFloor = e->floor;
+
+    for (int f = 0; f < currentFloor; f++){
+        for (int b = 0; b < N_BUTTONS; b++){
+            if(e->requests[f][b] == 1){
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
+
+int elevator_hasRequestsOver(const Elevator *e){
+    int currentFloor = e->floor;
+
+    for (int f = currentFloor + 1; f < N_FLOORS; f++){
+        for (int b = 0; b < N_BUTTONS; b++){
+            if (e->requests[f][b] == 1){
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
+
+int elevator_hasRequestsHere(const Elevator *e){
+    int currentFloor = e->floor;
+
+    for (int b = 0; b < N_BUTTONS; b++){
+        if (e->requests[currentFloor][b] == 1){
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+int elevator_shouldStop(const Elevator *e){
+    
+}
+
 //lyslogikk
 
 void elevator_updateButtonLamps(Elevator *e){
