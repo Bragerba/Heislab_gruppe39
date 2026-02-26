@@ -1,4 +1,6 @@
 #include "statemachine.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 
 void stateMachine(Elevator *e) {
@@ -20,11 +22,23 @@ void stateMachine(Elevator *e) {
 
 // Fyll in logikk/ funksjonalitet
 void state_doorOpen(Elevator *e) {
+
+    elevio_doorOpenLamp(1);
+
+    if(e->obstruction){
+        e->doorTime = time(NULL);
+    } 
     
-}
+    else if (time(NULL) - e->doorTime >= 3){
+        elevio_doorOpenLamp(0);
+        elevator_clearRequests(e);
+        e->state = IDLE;
+    }
+
+}  
 
 void state_idle(Elevator *e) {
-
+    
 }
 
 void state_moving(Elevator *e) {

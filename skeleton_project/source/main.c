@@ -4,6 +4,7 @@
 #include <time.h>
 #include "driver/elevio.h"
 #include "driver/elevator.h"
+#include "driver/statemachine.h"
 
 
 
@@ -15,8 +16,6 @@ int main(){
     
     printf("=== Example Program ===\n");
     printf("Press the stop button on the elevator panel to exit\n");
-
-    //elevio_motorDirection(DIRN_UP);
 
     elevator_clearButtonLamps(&e);
 
@@ -32,8 +31,20 @@ int main(){
 
         e.stopButton = elevio_stopButton();
         e.obstruction = elevio_obstruction();
-
         elevator_requests(&e);
+
+        if(e.state == MOVING && sensor == 2) {
+            elevio_motorDirection(DIRN_STOP);
+            e.doorTime = time(NULL); //Start timeren her
+            e.state = DOOR_OPEN;
+        } 
+
+        else if(e.state == IDLE && e.floor != 2) {
+            elevio_motorDirection(DIRN_UP);
+            e.state = MOVING;
+        }
+
+        stateMachine(&e);
 
         elevator_updateButtonLamps(&e);
         elevator_updateFloorLamps(&e);

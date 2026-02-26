@@ -63,6 +63,8 @@ void elevator_clearButtonLamps(Elevator *e){
             elevio_buttonLamp(f, b, 0);
         }
     }
+
+    elevio_doorOpenLamp(0);
 }
 
 void elevator_updateFloorLamps(Elevator *e){

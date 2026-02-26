@@ -1,7 +1,6 @@
 #pragma once
 
 #include <time.h>
-#include <time.h>
 #include "elevio.h"
 #include <stdlib.h>
 typedef enum {
@@ -14,7 +13,7 @@ typedef enum {
 typedef struct {
 MotorDirection dir;
 ElevatorState state;
-clock_t doorTime; 
+time_t doorTime; 
 int floor; // etasjen man er på (0-3) (-1 for udefinert)
 int stopButton; // 0 eller 1
 int obstruction; // 0 eller 1
