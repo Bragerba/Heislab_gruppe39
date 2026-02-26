@@ -25,6 +25,7 @@ int requests[N_FLOORS][N_BUTTONS]; // Bestillinger / kømatrise
 void elevator_calibrate(Elevator *e); // kalibrerer heisen (oppstartsekvens) O1, O2, O3
 void elevator_requests(Elevator *e); // tar imot bestillinger og legger inn i matrisen H1, H2
 void elevator_clearCurrentFloorRequests(Elevator *e); // fjerner alle requests på den etasjen man er på H3
+void elevator_clearAllRequests(Elevator *e);
 
 
 //bestillingslogikk, skal bare sjekke matrisen ikke endre objektet

@@ -41,6 +41,15 @@ void elevator_clearCurrentFloorRequests(Elevator *e){ //sletter bestilling på n
     }
 }
 
+void elevator_clearAllRequests(Elevator *e){
+    for (int f = 0; f < N_FLOORS; f++){
+        for (int b = 0; b < N_BUTTONS; b++){
+            e->requests[f][b] = 0;
+        }
+    }
+
+
+}
 //Bestillingslogikk
 
 int elevator_hasRequestsBelow(const Elevator *e){
