@@ -31,3 +31,10 @@ void elevator_clearRequests(Elevator *e); // fjerner alle requests på den etasj
 void elevator_hasRequestsBelow(Elevator *e);
 void elevator_hasRequestsOver(Elevator *e);
 void elevator_hasRequestsHere(Elevator *e);
+
+//lys logikk
+void elevator_updateButtonLamps(Elevator *e); //oppdaterer alle knappelysene
+void elevator_clearButtonLamps(Elevator *e); //slukker alle lysene
+void elevator_updateFloorLamps(Elevator *e); //setter lysene som indikerer hvilken etasje vi er i
+void elevator_updateStopLamp(Elevator *e); //oppdaterer stopp lyset
+

@@ -3,22 +3,52 @@
 #include <signal.h>
 #include <time.h>
 #include "driver/elevio.h"
-#include "lights.h"
+#include "driver/elevator.h"
 
 
 
 int main(){
 
+    Elevator e;
 
-    
     elevio_init();
     
     printf("=== Example Program ===\n");
     printf("Press the stop button on the elevator panel to exit\n");
 
-    elevio_motorDirection(DIRN_UP);
+    //elevio_motorDirection(DIRN_UP);
+
+    elevator_clearButtonLamps(&e);
+
+    elevator_calibrate(&e);
+
 
     while(1){
+
+        int sensor = elevio_floorSensor();
+        if(sensor != -1) {
+            e.floor = sensor;
+        }
+
+        e.stopButton = elevio_stopButton();
+        e.obstruction = elevio_obstruction();
+
+        elevator_requests(&e);
+
+        elevator_updateButtonLamps(&e);
+        elevator_updateFloorLamps(&e);
+        elevator_updateStopLamp(&e);
+            
+        if(elevio_stopButton()){
+            elevio_motorDirection(DIRN_STOP);
+            elevator_clearButtonLamps(&e);
+            break;
+        }
+
+        nanosleep(&(struct timespec){0, 20*1000*1000}, NULL);
+    }
+
+    /*while(1){
         int floor = elevio_floorSensor();
 
         if(floor == 0){
@@ -51,7 +81,7 @@ int main(){
 
         
         nanosleep(&(struct timespec){0, 20*1000*1000}, NULL);
-    }
+    }*/
 
     return 0;
 }

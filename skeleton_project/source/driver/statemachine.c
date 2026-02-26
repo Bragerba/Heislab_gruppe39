@@ -20,7 +20,7 @@ void stateMachine(Elevator *e) {
 
 // Fyll in logikk/ funksjonalitet
 void state_doorOpen(Elevator *e) {
-
+    
 }
 
 void state_idle(Elevator *e) {
