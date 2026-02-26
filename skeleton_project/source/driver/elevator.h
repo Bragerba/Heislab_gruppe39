@@ -26,10 +26,11 @@ void elevator_requests(Elevator *e); // tar imot bestillinger og legger inn i ma
 void elevator_clearRequests(Elevator *e); // fjerner alle requests på den etasjen man er på H3
 
 
-//bestillingslogikk
-void elevator_hasRequestsBelow(Elevator *e);
-void elevator_hasRequestsOver(Elevator *e);
-void elevator_hasRequestsHere(Elevator *e);
+//bestillingslogikk, skal bare sjekke matrisen ikke endre objektet
+int elevator_hasRequestsBelow(const Elevator *e);
+int elevator_hasRequestsOver(const Elevator *e);
+int elevator_hasRequestsHere(const Elevator *e);
+int elevator_shouldStop(const Elevator *e); //logikk for om vi skal stoppe
 
 //lys logikk
 void elevator_updateButtonLamps(Elevator *e); //oppdaterer alle knappelysene
