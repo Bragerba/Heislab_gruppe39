@@ -10,7 +10,6 @@ typedef enum {
     DOOR_OPEN
 } ElevatorState;
 
-//snapshots
 typedef struct {
 MotorDirection dir;
 ElevatorState state;
@@ -25,7 +24,8 @@ int requests[N_FLOORS][N_BUTTONS]; // Bestillinger / kømatrise
 void elevator_calibrate(Elevator *e); // kalibrerer heisen (oppstartsekvens) O1, O2, O3
 void elevator_requests(Elevator *e); // tar imot bestillinger og legger inn i matrisen H1, H2
 void elevator_clearCurrentFloorRequests(Elevator *e); // fjerner alle requests på den etasjen man er på H3
-void elevator_clearAllRequests(Elevator *e);
+void elevator_clearAllRequests(Elevator *e); //fjerner alle requests
+void elevator_handleStopButton(Elevator *e); //Håndterer hvordan stoppknappen skal tolkes basrt på heisposisjon
 
 
 //bestillingslogikk, skal bare sjekke matrisen ikke endre objektet
@@ -36,9 +36,7 @@ int elevator_shouldStop(const Elevator *e); //logikk for om vi skal stoppe
 
 //lys logikk
 void elevator_updateButtonLamps(Elevator *e); //oppdaterer alle knappelysene
-void elevator_clearButtonLamps(Elevator *e); //slukker alle lysene
 void elevator_updateFloorLamps(Elevator *e); //setter lysene som indikerer hvilken etasje vi er i
 void elevator_updateStopLamp(Elevator *e); //oppdaterer stopp lyset
 
-void elevator_updateObstruction(Elevator *e); //?
 

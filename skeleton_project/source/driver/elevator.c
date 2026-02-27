@@ -6,6 +6,7 @@ ElevatorState state;
 
 void elevator_calibrate(Elevator *e) {
     elevio_motorDirection(DIRN_DOWN);
+    elevio_doorOpenLamp(0);
 
     while (elevio_floorSensor() == -1) {
         //fortsett å kjør til vi finner gyldig etasje
@@ -50,6 +51,20 @@ void elevator_clearAllRequests(Elevator *e){
 
 
 }
+
+void elevator_handleStopButton(Elevator *e){
+    elevio_motorDirection(DIRN_STOP);
+    elevator_clearAllRequests(e);
+
+    if (elevio_floorSensor() != -1){
+        e->state = DOOR_OPEN;
+        e->doorTime = time(NULL);
+    } else {
+        e->state = IDLE;
+    }
+            
+}
+
 //Bestillingslogikk
 
 int elevator_hasRequestsBelow(const Elevator *e){
@@ -96,13 +111,9 @@ int elevator_shouldStop(const Elevator *e){
 
     int currentFloor = e->floor;
 
-    if(currentFloor == -1){
-        return 0;
-    }
+    if(currentFloor == -1){return 0;}
 
-    if(e->requests[currentFloor][BUTTON_CAB]){
-        return 1;
-    }
+    if(e->requests[currentFloor][BUTTON_CAB]){return 1;}
 
     if(e->dir == DIRN_UP){
 
@@ -137,16 +148,6 @@ void elevator_updateButtonLamps(Elevator *e){
     }
 }
 
-void elevator_clearButtonLamps(Elevator *e){
-    for(int f = 0; f < N_FLOORS; f++){
-        for(int b = 0; b < N_BUTTONS; b++){
-            elevio_buttonLamp(f, b, 0);
-        }
-    }
-
-    elevio_doorOpenLamp(0);
-}
-
 void elevator_updateFloorLamps(Elevator *e){
     if (e->floor != -1){
         elevio_floorIndicator(e->floor);
@@ -154,5 +155,6 @@ void elevator_updateFloorLamps(Elevator *e){
 }
 
 void elevator_updateStopLamp(Elevator *e){
-    elevio_stopLamp(e->stopButton);
+    elevio_stopLamp(elevio_stopButton());
 }
+

@@ -26,7 +26,9 @@ void stateMachine(Elevator *e) {
 
 void state_doorOpen(Elevator *e) {
 
-    if(e->obstruction){
+    elevio_doorOpenLamp(1);
+
+    if(e->obstruction || e->stopButton){
         e->doorTime = time(NULL);
         return;
     } 
@@ -43,7 +45,6 @@ void state_idle(Elevator *e) {
     elevio_motorDirection(DIRN_STOP);
 
     if (elevator_hasRequestsHere(e)) {
-        elevio_doorOpenLamp(1);
         e->doorTime = time(NULL);
         elevator_clearCurrentFloorRequests(e);
         e->state = DOOR_OPEN;
@@ -64,18 +65,17 @@ void state_idle(Elevator *e) {
 
 void state_moving(Elevator *e) {
     int floor = elevio_floorSensor();
+
     if (floor != -1) {
         e->floor = floor;
-    }
+        elevio_floorIndicator(e->floor);
 
-    if (elevator_shouldStop(e)) {
-        elevio_motorDirection(DIRN_STOP);
-
-        elevio_doorOpenLamp(1);
-        e->doorTime = time(NULL);
-        elevator_clearCurrentFloorRequests(e);
-
-        e->state = DOOR_OPEN;
-        return;
+        if (elevator_shouldStop(e)) {
+            elevio_motorDirection(DIRN_STOP);
+            e->doorTime = time(NULL);
+            elevator_clearCurrentFloorRequests(e);
+            e->state = DOOR_OPEN;
+            return;
+        }    
     }
 }

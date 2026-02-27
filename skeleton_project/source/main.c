@@ -21,15 +21,14 @@ int main(){
         if(sensor != -1) {
             e.floor = sensor;
         }
+
         e.stopButton = elevio_stopButton();
         e.obstruction = elevio_obstruction();
 
         elevator_requests(&e);
 
         if (e.stopButton) {
-            elevio_motorDirection(DIRN_STOP);
-            elevator_clearAllRequests(&e);
-            // e.state = IDLE; eller en egen STOP-state
+            elevator_handleStopButton(&e);
         } else {
             stateMachine(&e);
         }
@@ -39,6 +38,7 @@ int main(){
         elevator_updateStopLamp(&e);
 
         nanosleep(&(struct timespec){0, 20*1000*1000}, NULL);
+
     }
 
     return 0;
